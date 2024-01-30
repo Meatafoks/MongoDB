@@ -5,3 +5,4 @@ locale
 .idea
 *.iml
 coverage
+test
