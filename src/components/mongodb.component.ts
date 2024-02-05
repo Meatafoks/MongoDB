@@ -26,8 +26,8 @@ export class MongoDbComponent {
 
     public constructor(private deps: { config: ConfigWithMongoDb }) {
         const dbConfig = deps.config.mongodb;
-        this.connectionString = MongoDbComponent.createConnectionString(dbConfig);
 
+        this.connectionString = MongoDbComponent.createConnectionString(dbConfig);
         this.client = new MongoClient(this.connectionString);
         this.database = this.client.db(dbConfig.database);
     }

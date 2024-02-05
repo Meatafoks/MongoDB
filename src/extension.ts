@@ -1,8 +1,8 @@
-import { LoggerFactory, MetafoksAppConfig, MetafoksContext } from '@metafoks/app';
+import { createExtension, LoggerFactory, MetafoksAppConfig } from '@metafoks/app';
 import { MongoDbComponent } from './components';
 import { ConfigWithMongoDb } from './config';
 
-export async function mongoDbExtension(context: MetafoksContext) {
+export const mongoDbExtension = createExtension(context => {
     const logger = LoggerFactory.createLoggerByName('MongoDbExtension');
     const config = context.getConfig() as ConfigWithMongoDb & MetafoksAppConfig;
     logger.level = config.metafoks?.logger?.level?.app ?? 'INFO';
@@ -12,13 +12,10 @@ export async function mongoDbExtension(context: MetafoksContext) {
     }
 
     const componentName = config.mongodb.componentName ?? 'db';
-
-    logger.debug('starting loading extension');
     context.addClass(componentName, MongoDbComponent);
 
-    if (config.mongodb.autorun !== false) {
-        await context.resolve<MongoDbComponent>(componentName).connect();
-    }
-
-    logger.info('extension loaded');
-}
+    return {
+        identifier: 'ru.metafoks.extension.MongoDB',
+        autorun: async () => await context.resolve<MongoDbComponent>(componentName).connect(),
+    };
+});
