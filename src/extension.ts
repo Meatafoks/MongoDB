@@ -3,12 +3,10 @@ import { MongoDbComponent } from './components';
 import { ConfigWithMongoDb } from './config';
 
 export const mongoDbExtension = createExtension(context => {
-    const logger = LoggerFactory.createLoggerByName('MongoDbExtension');
     const config = context.getConfig() as ConfigWithMongoDb & MetafoksAppConfig;
-    logger.level = config.metafoks?.logger?.level?.app ?? 'INFO';
 
     if (!config.mongodb) {
-        throw new Error('config.mongodb configuration required!');
+        throw new Error('`config:mongodb.*` configuration required!');
     }
 
     const componentName = config.mongodb.componentName ?? 'db';

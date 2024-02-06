@@ -1,5 +1,5 @@
 import { ConfigWithMongoDb, MongoDbComponent, mongoDbExtension } from '../src';
-import { createAbstractApplication, MetafoksAbstractApplication } from '@metafoks/app';
+import { createAbstractApplication } from '@metafoks/app';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 describe('connection test', () => {
@@ -14,21 +14,18 @@ describe('connection test', () => {
     });
 
     it('should load connection', async () => {
-        const app = createAbstractApplication<ConfigWithMongoDb>({
+        const app = await createAbstractApplication<ConfigWithMongoDb>({
             config: {
-                overrides: {
-                    mongodb: {
-                        database: 'database',
-                        uri: mongod.getUri(),
-                        autorun: false,
-                    },
-                    metafoks: { logger: { level: { app: 'trace' } } },
+                mongodb: {
+                    database: 'database',
+                    uri: mongod.getUri(),
+                    autorun: false,
                 },
             },
-            with: [mongoDbExtension],
+            extensions: [mongoDbExtension],
         });
 
-        expect(app.getContext().getContainer().hasRegistration('db')).toBeTruthy();
+        expect(app.getContext().has('db')).toBeTruthy();
         const component = app.resolve<MongoDbComponent>('db');
 
         await expect(component.connect()).resolves.toBe(void {});

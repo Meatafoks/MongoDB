@@ -1,6 +1,5 @@
-import { ConfigWithMongoDb, MongoDbComponent, mongoDbExtension } from '../src';
-import { createAbstractApplication, MetafoksAbstractApplication } from '@metafoks/app';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { ConfigWithMongoDb, mongoDbExtension } from '../src';
+import { createAbstractApplication } from '@metafoks/app';
 
 const dbFn = jest.fn();
 const connectFn = jest.fn();
@@ -21,19 +20,17 @@ describe('functional test', () => {
     });
 
     it('should call mongodb functions', async () => {
-        const app = createAbstractApplication<ConfigWithMongoDb>({
+        const app = await createAbstractApplication<ConfigWithMongoDb>({
             config: {
-                overrides: {
-                    mongodb: {
-                        database: 'randomDb',
-                        uri: 'random uri',
-                    },
+                mongodb: {
+                    database: 'randomDb',
+                    uri: 'random uri',
                 },
             },
-            with: [mongoDbExtension],
+            extensions: [mongoDbExtension],
         });
 
-        expect(app.getContext().getContainer().hasRegistration('db')).toBeTruthy();
+        expect(app.getContext().has('db')).toBeTruthy();
 
         expect(dbFn).toHaveBeenCalledTimes(1);
         expect(connectFn).toHaveBeenCalledTimes(1);
