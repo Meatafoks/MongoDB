@@ -1,11 +1,11 @@
-export type MongoDbConnection =
-    | { uri: string }
-    | { host: string; port?: number }
-    | { login: string; password: string; host: string; port?: number };
+export type MongoDbUriConnection = { uri: string };
+export type MongoDbHostConnection = { host: string; port?: number };
+export type MongoDbAuthorizedConnection = { login: string; password: string; host: string; port?: number };
+
+export type MongoDbConnection = MongoDbUriConnection | MongoDbHostConnection | MongoDbAuthorizedConnection;
 
 export type MongoDbConfig = {
     database: string;
-    autorun?: boolean;
     componentName?: string;
 } & MongoDbConnection;
 

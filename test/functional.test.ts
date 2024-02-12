@@ -1,5 +1,5 @@
 import { ConfigWithMongoDb, mongoDbExtension } from '../src';
-import { createAbstractApplication } from '@metafoks/app';
+import { containerOf, MetafoksTestingApplication, Override, With } from '@metafoks/app';
 
 const dbFn = jest.fn();
 const connectFn = jest.fn();
@@ -14,23 +14,20 @@ jest.mock('mongodb', () => ({
 }));
 
 describe('functional test', () => {
-    beforeEach(() => {
-        dbFn.mockReset();
-        connectFn.mockReset();
-    });
+    @MetafoksTestingApplication()
+    @With(mongoDbExtension)
+    @Override<ConfigWithMongoDb>({
+        mongodb: {
+            database: 'randomDb',
+            uri: 'random uri',
+        },
+    })
+    class App {}
 
     it('should call mongodb functions', async () => {
-        const app = await createAbstractApplication<ConfigWithMongoDb>({
-            config: {
-                mongodb: {
-                    database: 'randomDb',
-                    uri: 'random uri',
-                },
-            },
-            extensions: [mongoDbExtension],
-        });
+        const container = await containerOf(App);
 
-        expect(app.getContext().has('db')).toBeTruthy();
+        expect(container.context.has('db')).toBeTruthy();
 
         expect(dbFn).toHaveBeenCalledTimes(1);
         expect(connectFn).toHaveBeenCalledTimes(1);

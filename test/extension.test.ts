@@ -1,32 +1,16 @@
-import { ConfigWithMongoDb, MongoDbComponent, mongoDbExtension } from '../src';
-import { createAbstractApplication } from '@metafoks/app';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { MongoDbComponent, mongoDbTestingExtension } from '../src';
+import { containerOf, MetafoksTestingApplication, With } from '@metafoks/app';
 
 describe('connection test', () => {
-    let mongod!: MongoMemoryServer;
-
-    beforeEach(async () => {
-        mongod = await MongoMemoryServer.create();
-    });
-
-    afterEach(async () => {
-        await mongod.stop();
-    });
+    @MetafoksTestingApplication()
+    @With(mongoDbTestingExtension)
+    class App {}
 
     it('should load connection', async () => {
-        const app = await createAbstractApplication<ConfigWithMongoDb>({
-            config: {
-                mongodb: {
-                    database: 'database',
-                    uri: mongod.getUri(),
-                    autorun: false,
-                },
-            },
-            extensions: [mongoDbExtension],
-        });
+        const container = await containerOf(App);
 
-        expect(app.getContext().has('db')).toBeTruthy();
-        const component = app.resolve<MongoDbComponent>('db');
+        expect(container.context.has('db')).toBeTruthy();
+        const component = container.context.resolve<MongoDbComponent>('db');
 
         await expect(component.connect()).resolves.toBe(void {});
     });
