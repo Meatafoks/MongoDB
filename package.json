@@ -15,9 +15,9 @@
   ],
   "scripts": {
     "build": "tsc",
+    "test": "jest",
     "format": "prettier --write \"src/**/*.(js|ts)\"",
-    "lint": "eslint src --fix --ext .js,.ts",
-    "testApp": "ts-node ./__tests__/app.ts"
+    "lint": "eslint src --fix --ext .js,.ts"
   },
   "publishConfig": {
     "access": "public"
