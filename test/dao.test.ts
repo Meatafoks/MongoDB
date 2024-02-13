@@ -1,5 +1,5 @@
-import { SingleIdentifierDataAccessObject, MongoDbComponent, mongoDbTestingExtension } from '../src';
-import { asComponent, Autowire, containerOf, MetafoksTestingApplication, With } from '@metafoks/app';
+import { SingleIdentifierDataAccessObject, MongoDbComponent, mongoDbMemoryExtension } from '../src';
+import { Autowire, Component, runMetafoksApplication, TestingApplication, With } from '@metafoks/app';
 
 interface TestEntity {
     taskId: string;
@@ -7,20 +7,21 @@ interface TestEntity {
 }
 
 describe('data access object test', () => {
+    @Component('testDao')
     class TestDao extends SingleIdentifierDataAccessObject<TestEntity, 'taskId'> {
         public constructor(protected deps: { db: MongoDbComponent }) {
             super({ db: deps.db, collectionName: 'tasks', singleIdentifierField: 'taskId' });
         }
     }
 
-    @MetafoksTestingApplication()
-    @With(mongoDbTestingExtension)
-    @Autowire('testDao', asComponent(TestDao))
+    @Autowire('testDao', TestDao)
+    @With(mongoDbMemoryExtension)
+    @TestingApplication
     class App {}
 
     it('should insert data', async () => {
         // given
-        const container = await containerOf(App);
+        const container = await runMetafoksApplication(App);
         const testDao = container.context.resolve<TestDao>('testDao');
         const db = container.context.resolve<MongoDbComponent>('db');
         const collection = db.getCollection<TestEntity>('tasks');

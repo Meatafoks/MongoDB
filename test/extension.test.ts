@@ -1,13 +1,13 @@
-import { MongoDbComponent, mongoDbTestingExtension } from '../src';
-import { containerOf, MetafoksTestingApplication, With } from '@metafoks/app';
+import { MongoDbComponent, mongoDbMemoryExtension } from '../src';
+import { runMetafoksApplication, TestingApplication, With } from '@metafoks/app';
 
 describe('connection test', () => {
-    @MetafoksTestingApplication()
-    @With(mongoDbTestingExtension)
+    @TestingApplication
+    @With(mongoDbMemoryExtension)
     class App {}
 
     it('should load connection', async () => {
-        const container = await containerOf(App);
+        const container = await runMetafoksApplication(App);
 
         expect(container.context.has('db')).toBeTruthy();
         const component = container.context.resolve<MongoDbComponent>('db');
