@@ -1,10 +1,10 @@
 import { CollectionOptions, Db, MongoClient } from 'mongodb';
 import { ConfigWithMongoDb, MongoDbConfig } from '../config';
-import { createLogger } from '@metafoks/app';
 import { Document } from 'bson';
+import { LoggerFactory } from 'metafoks-application';
 
-export class MongoDbComponent {
-    private readonly logger = createLogger(MongoDbComponent);
+export class MongoDB {
+    private readonly logger = LoggerFactory.create(MongoDB);
     private readonly connectionString: string;
 
     public readonly client: MongoClient;
@@ -24,10 +24,10 @@ export class MongoDbComponent {
         }
     }
 
-    public constructor(private deps: { config: ConfigWithMongoDb }) {
-        const dbConfig = deps.config.mongodb;
+    public constructor(config: ConfigWithMongoDb) {
+        const dbConfig = config.mongodb;
 
-        this.connectionString = MongoDbComponent.createConnectionString(dbConfig);
+        this.connectionString = MongoDB.createConnectionString(dbConfig);
         this.client = new MongoClient(this.connectionString);
         this.database = this.client.db(dbConfig.database);
     }

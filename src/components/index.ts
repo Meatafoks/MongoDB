@@ -1,1 +1,1 @@
-export * from './mongodb.component';
+export * from './MongoDB';

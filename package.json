@@ -1,6 +1,6 @@
 {
   "name": "@metafoks/mongodb",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Metafoks mongodb extension",
   "main": "lib/index.js",
   "files": [
@@ -29,8 +29,8 @@
   "author": "Yakov Foks <notafoks@yandex.ru>",
   "license": "MIT",
   "devDependencies": {
-    "@metafoks/eslint-config": "1.0.0",
-    "@metafoks/prettier": "1.0.0",
+    "@metafoks/eslint-config": "1.1.0",
+    "@metafoks/prettier": "1.1.0",
     "@types/jest": "29.4.0",
     "@types/node": "^20.11.10",
     "@types/uuid": "^9.0.8",
@@ -81,8 +81,10 @@
       "tsx"
     ]
   },
+  "peerDependencies": {
+    "metafoks-application": "^1.0.2"
+  },
   "dependencies": {
-    "@metafoks/app": "^1.2.0",
     "mongodb-memory-server": "9.1.6",
     "mongodb": "6.3.0",
     "uuid": "^9.0.1"

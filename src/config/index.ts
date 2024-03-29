@@ -6,7 +6,6 @@ export type MongoDbConnection = MongoDbUriConnection | MongoDbHostConnection | M
 
 export type MongoDbConfig = {
     database: string;
-    componentName?: string;
 } & MongoDbConnection;
 
 export interface ConfigWithMongoDb {

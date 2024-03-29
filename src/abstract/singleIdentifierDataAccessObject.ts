@@ -1,5 +1,5 @@
 import { Collection, Filter, Document, UUID } from '../types';
-import { MongoDbComponent } from '../components';
+import { MongoDB } from '../components';
 import { v4 } from 'uuid';
 import { OptionalUnlessRequiredId } from 'mongodb';
 
@@ -13,7 +13,7 @@ export abstract class SingleIdentifierDataAccessObject<
 
     protected constructor(deps: {
         collectionName: string;
-        db: MongoDbComponent;
+        db: MongoDB;
         singleIdentifierField: IdentifierField;
     }) {
         this.collection = deps.db.getCollection<TSchema>(deps.collectionName);
