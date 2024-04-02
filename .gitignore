@@ -8,5 +8,7 @@
 !.gitignore
 !.npmignore
 !package.json
+!package-lock.json
+!LICENCE
 !README.md
 !tsconfig.json

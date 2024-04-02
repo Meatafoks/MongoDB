@@ -1,6 +1,6 @@
 {
   "name": "@metafoks/mongodb",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Metafoks mongodb extension",
   "main": "lib/index.js",
   "files": [
@@ -82,7 +82,7 @@
     ]
   },
   "peerDependencies": {
-    "metafoks-application": "^1.0.2"
+    "metafoks-application": "^1.0.5"
   },
   "dependencies": {
     "mongodb-memory-server": "9.1.6",
