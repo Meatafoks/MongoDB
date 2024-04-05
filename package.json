@@ -1,6 +1,6 @@
 {
   "name": "@metafoks/mongodb",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Metafoks mongodb extension",
   "main": "lib/index.js",
   "files": [
