@@ -11,4 +11,8 @@ export const MongoDbExtension: MetafoksExtension<ConfigWithMongoDb> = {
     const db = container.get(MongoDB)
     await db.connect()
   },
+  close: async (force, container) => {
+    const db = container.get(MongoDB)
+    await db.close(force)
+  },
 }

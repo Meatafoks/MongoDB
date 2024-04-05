@@ -1,49 +1,51 @@
-import { CollectionOptions, Db, MongoClient } from 'mongodb';
-import { ConfigWithMongoDb, MongoDbConfig } from '../config';
-import { Document } from 'bson';
-import { LoggerFactory } from 'metafoks-application';
+import { CollectionOptions, Db, MongoClient } from 'mongodb'
+import { ConfigWithMongoDb, MongoDbConfig } from '../config'
+import { Document } from 'bson'
+import { LoggerFactory } from 'metafoks-application'
 
 export class MongoDB {
-    private readonly logger = LoggerFactory.create(MongoDB);
-    private readonly connectionString: string;
+  private readonly logger = LoggerFactory.create(MongoDB)
+  private readonly connectionString: string
 
-    public readonly client: MongoClient;
-    public readonly database: Db;
+  public readonly client: MongoClient
+  public readonly database: Db
 
-    public static createConnectionString(config: MongoDbConfig) {
-        if ('uri' in config) {
-            return config.uri;
-        } else {
-            const port = config.port ?? 27017;
+  public static createConnectionString(config: MongoDbConfig) {
+    if ('uri' in config) {
+      return config.uri
+    } else {
+      const port = config.port ?? 27017
 
-            if ('login' in config && 'password' in config) {
-                return `mongodb://${config.login}:${config.password}@${config.host}:${port}/?authMechanism=DEFAULT`;
-            } else {
-                return `mongodb://${config.host}:${port}/?authMechanism=DEFAULT`;
-            }
-        }
+      if ('login' in config && 'password' in config) {
+        return `mongodb://${config.login}:${config.password}@${config.host}:${port}/?authMechanism=DEFAULT`
+      } else {
+        return `mongodb://${config.host}:${port}/?authMechanism=DEFAULT`
+      }
     }
+  }
 
-    public constructor(config: ConfigWithMongoDb) {
-        const dbConfig = config.mongodb;
+  public constructor(config: ConfigWithMongoDb) {
+    const dbConfig = config.mongodb
 
-        this.connectionString = MongoDB.createConnectionString(dbConfig);
-        this.client = new MongoClient(this.connectionString);
-        this.database = this.client.db(dbConfig.database);
-    }
+    this.connectionString = MongoDB.createConnectionString(dbConfig)
+    this.client = new MongoClient(this.connectionString)
+    this.database = this.client.db(dbConfig.database)
+  }
 
-    public async connect() {
-        this.logger.debug(`connection to database`);
+  public async connect() {
+    this.logger.debug(`connection to database`)
 
-        await this.client.connect();
-        this.logger.info(`connected to database`);
-    }
+    await this.client.connect()
+    this.logger.info(`connected to database`)
+  }
+  public async close(force: boolean = false) {
+    this.logger.debug(`closing connection to database...`)
 
-    public getCollection<T extends Document = Document>(name: string, options: CollectionOptions = {}) {
-        return this.database.collection<T>(name, options);
-    }
+    await this.client.close(force)
+    this.logger.info(`connection to database closed`)
+  }
 
-    public async close() {
-        await this.client.close();
-    }
+  public getCollection<T extends Document = Document>(name: string, options: CollectionOptions = {}) {
+    return this.database.collection<T>(name, options)
+  }
 }
