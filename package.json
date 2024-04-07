@@ -82,11 +82,11 @@
     ]
   },
   "peerDependencies": {
-    "metafoks-application": "^1.0.15"
+    "metafoks-application": "^1.0.18"
   },
   "dependencies": {
-    "mongodb-memory-server": "9.1.6",
     "mongodb": "6.3.0",
+    "mongodb-memory-server": "9.1.6",
     "uuid": "^9.0.1"
   }
 }
