@@ -10,15 +10,15 @@ export class MongoDB {
   public static extension = ExtensionFactory.create<MongoDbConfig>({
     identifier: 'com.metafoks.extension.MongoDB',
     configProperty: 'mongodb',
-    install: (container, config) => {
-      container.set(MongoDB, new MongoDB(config))
+    install: (app, config) => {
+      app.container.set(MongoDB.name, new MongoDB(config))
     },
-    autorun: async container => {
-      const db = container.get(MongoDB)
+    autorun: async app => {
+      const db = app.container.getClassFirst(MongoDB)
       await db.connect()
     },
-    close: async (force, container) => {
-      const db = container.get(MongoDB)
+    close: async (app, config, force) => {
+      const db = app.container.getClassFirst(MongoDB)
       await db.close(force)
     },
   })
